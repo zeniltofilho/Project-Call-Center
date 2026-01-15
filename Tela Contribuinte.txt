@@ -1,0 +1,148 @@
+# Tela de Contribuintes - Exemplo baseado na imagem enviada
+# Autor: ChatGPT
+# Requisitos: Python 3.9+
+# Bibliotecas: tkinter (padrão)
+
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Contribuintes")
+        self.state("zoomed")
+        self.configure(bg="#dcdcdc")
+
+        self.create_top_bar()
+        self.create_table()
+        self.create_actions_bar()
+        self.create_bottom_tabs()
+
+    # ---------------- TOPO ----------------
+    def create_top_bar(self):
+        frame = tk.Frame(self, bg="#cfcfcf", pady=5)
+        frame.pack(fill="x")
+
+        tk.Button(frame, text="Cadastrar Doações").pack(side="left", padx=5)
+        tk.Button(frame, text="Exportar").pack(side="left", padx=5)
+        tk.Button(frame, text="Novo").pack(side="left", padx=5)
+
+        tk.Label(frame, text="Pesq.:", bg="#cfcfcf").pack(side="left", padx=(20, 2))
+        self.search_entry = tk.Entry(frame, width=30)
+        self.search_entry.pack(side="left")
+
+        self.combo_filter = ttk.Combobox(frame, values=["Código", "Nome", "Telefone"], width=12)
+        self.combo_filter.current(0)
+        self.combo_filter.pack(side="left", padx=5)
+
+        self.combo_status = ttk.Combobox(frame, values=["Todos", "Ativo", "Inativo"], width=10)
+        self.combo_status.current(0)
+        self.combo_status.pack(side="left", padx=5)
+
+        tk.Button(frame, text="Iniciar Conf. Grid").pack(side="left", padx=10)
+        tk.Button(frame, text="Vendas").pack(side="right", padx=10)
+
+    # ---------------- TABELA PRINCIPAL ----------------
+    def create_table(self):
+        frame = tk.Frame(self)
+        frame.pack(fill="both", expand=True, padx=5, pady=5)
+
+        columns = [
+            "codigo", "dt_status", "nome", "tipo", "status", "telefone",
+            "op_atual", "op_fixo", "op_rec", "setor", "data_vl", "rua", "email", "numero"
+        ]
+
+        self.tree = ttk.Treeview(frame, columns=columns, show="headings")
+
+        headings = [
+            "Código", "Dt. Status", "Nome", "Tipo", "Status", "Telefone",
+            "Op. Atual", "Op. Fixo", "Op. Rec", "Setor", "Data VL", "Rua", "E-mail", "Número"
+        ]
+
+        for col, head in zip(columns, headings):
+            self.tree.heading(col, text=head)
+            self.tree.column(col, width=90, anchor="center")
+
+        self.tree.column("nome", width=300, anchor="w")
+        self.tree.column("email", width=200, anchor="w")
+
+        scrollbar_y = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscroll=scrollbar_y.set)
+
+        self.tree.pack(side="left", fill="both", expand=True)
+        scrollbar_y.pack(side="right", fill="y")
+
+        # Dados de exemplo
+        for i in range(20):
+            self.tree.insert("", "end", values=(
+                i+1, "06/01/2026", f"CLIENTE {i+1}", "E", "110",
+                "(11)99999-0000", 38, 15, 0, 2, "22/01/2026", "Rua X", "email@email.com", 100
+            ))
+
+    # ---------------- BARRA DE AÇÕES ----------------
+    def create_actions_bar(self):
+        frame = tk.Frame(self, bg="#e5e5e5", pady=5)
+        frame.pack(fill="x")
+
+        tk.Button(frame, text="Inclusão").pack(side="left", padx=4)
+        tk.Button(frame, text="Alteração").pack(side="left", padx=4)
+        tk.Button(frame, text="Exclusão").pack(side="left", padx=4)
+
+        ttk.Separator(frame, orient="vertical").pack(side="left", fill="y", padx=10)
+
+        tk.Button(frame, text="Recibo").pack(side="left", padx=4)
+        tk.Button(frame, text="Boleto").pack(side="left", padx=4)
+        tk.Button(frame, text="Débito").pack(side="left", padx=4)
+        tk.Button(frame, text="Cartão").pack(side="left", padx=4)
+        tk.Button(frame, text="Energia").pack(side="left", padx=4)
+
+        tk.Label(frame, text="Distribuir cadastros por igual:").pack(side="right", padx=5)
+        tk.Entry(frame, width=5).pack(side="right")
+        tk.Label(frame, text="Valor:").pack(side="right")
+        tk.Entry(frame, width=8).pack(side="right")
+        tk.Button(frame, text="✔").pack(side="right", padx=5)
+
+    # ---------------- ABAS INFERIORES ----------------
+    def create_bottom_tabs(self):
+        notebook = ttk.Notebook(self)
+        notebook.pack(fill="both", expand=False, padx=5, pady=5)
+
+        tab_recibos = tk.Frame(notebook)
+        tab_boletos = tk.Frame(notebook)
+        tab_cartao = tk.Frame(notebook)
+
+        notebook.add(tab_recibos, text="Recibos")
+        notebook.add(tab_boletos, text="Boletos/Débito")
+        notebook.add(tab_cartao, text="Cartão Crédito")
+
+        self.create_recibos_table(tab_recibos)
+
+    def create_recibos_table(self, parent):
+        columns = [
+            "data_rec", "ligacao", "valor", "flag", "nosso_num", "status",
+            "ope", "movimento", "data_status", "dt_deposito"
+        ]
+
+        tree = ttk.Treeview(parent, columns=columns, show="headings", height=8)
+
+        headers = [
+            "Data Rec", "Ligação", "Valor", "FLEG", "NossoNum", "Status",
+            "Ope.", "Movimento", "Data Status", "Dt Depósito"
+        ]
+
+        for c, h in zip(columns, headers):
+            tree.heading(c, text=h)
+            tree.column(c, width=100, anchor="center")
+
+        tree.pack(fill="both", expand=True)
+
+        for i in range(5):
+            tree.insert("", "end", values=(
+                "07/01/2026", "06/01/2026", "R$ 20,00", "Impresso",
+                "12475218", "Ent. Prévia", 38, "16/12/2025", "07/01/2026", ""
+            ))
+
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()

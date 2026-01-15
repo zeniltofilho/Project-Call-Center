@@ -1,0 +1,153 @@
+# Dashboard Telemarketing - Layout baseado na imagem enviada
+# Autor: ChatGPT
+# Requisitos: Python 3.9+
+# pip install matplotlib
+
+import tkinter as tk
+from tkinter import ttk
+from datetime import datetime
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
+class DashboardApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Telemarketing - LAR FRANCISCO DE ASSIS")
+        self.state("zoomed")
+        self.configure(bg="#e6e6e6")
+
+        self.create_menu()
+        self.create_toolbar()
+        self.create_top_charts()
+        self.create_bottom_chart()
+        self.create_status_bar()
+
+    # ---------------- MENU ----------------
+    def create_menu(self):
+        menubar = tk.Menu(self)
+        self.config(menu=menubar)
+
+        for menu_name in ["Cadastros", "Consultas", "Impressão", "Opções", "Tabelas", "Utilitários"]:
+            m = tk.Menu(menubar, tearoff=0)
+            menubar.add_cascade(label=menu_name, menu=m)
+
+    # ---------------- TOOLBAR ----------------
+    def create_toolbar(self):
+        frame = tk.Frame(self, bg="#d0d0d0", height=70)
+        frame.pack(fill="x")
+
+        buttons = [
+            "Contribuintes", "Recibos", "Bol/Déb/Car", "Operadores", "Mensageiros",
+            "Supervisores", "Ruas", "Setores", "Usuários", "Listagem", "Msg", "Sair"
+        ]
+
+        for b in buttons:
+            ttk.Button(frame, text=b, width=12).pack(side="left", padx=3, pady=10)
+
+    # ---------------- CHART AREA TOP ----------------
+    def create_top_charts(self):
+        frame = tk.Frame(self, bg="#e6e6e6")
+        frame.pack(fill="x", padx=10, pady=5)
+
+        self.create_chart_meta_media(frame)
+        self.create_chart_meta_valor(frame)
+
+    def create_chart_meta_media(self, parent):
+        fig = Figure(figsize=(5, 3), dpi=100)
+        ax = fig.add_subplot(111)
+
+        meta = [50]
+        producao = [40.75]
+
+        ax.bar([0], meta, width=0.3, label="Meta")
+        ax.bar([0.35], producao, width=0.3, label="Produção")
+        ax.set_title("Meta de Produção para o Dia - Média por Ficha")
+        ax.set_xticks([0.15])
+        ax.set_xticklabels(["06/01/2026"])
+        ax.legend()
+
+        canvas = FigureCanvasTkAgg(fig, master=parent)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side="left", padx=10)
+
+    def create_chart_meta_valor(self, parent):
+        fig = Figure(figsize=(5, 3), dpi=100)
+        ax = fig.add_subplot(111)
+
+        categorias = ["Meta", "Produção", "Fidel C/Ch", "Fidel S/Ch"]
+        valores = [3000, 2241, 240, 0]
+
+        ax.bar(categorias, valores)
+        ax.set_title("Meta de Produção para o Dia - Valor Total")
+
+        canvas = FigureCanvasTkAgg(fig, master=parent)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side="left", padx=10)
+
+        panel = tk.Frame(parent, bg="#f2f2f2", bd=1, relief="solid")
+        panel.pack(side="left", fill="y", padx=10)
+
+        tk.Label(panel, text="Geral").pack(anchor="w", padx=5)
+        ttk.Combobox(panel, values=["Geral", "Operador", "Setor"], width=15).pack(padx=5, pady=2)
+
+        tk.Label(panel, text="Produção").pack(anchor="w", padx=5, pady=(10,0))
+        tk.Radiobutton(panel, text="Prod. Total").pack(anchor="w", padx=10)
+        tk.Radiobutton(panel, text="Prod. Imediata").pack(anchor="w", padx=10)
+
+        tk.Label(panel, text="Produção imediata até:").pack(anchor="w", padx=5, pady=(10,0))
+        ttk.Entry(panel, width=12).pack(padx=5)
+
+        ttk.Button(panel, text="Imprimir Tela").pack(pady=10)
+
+    # ---------------- BOTTOM CHART ----------------
+    def create_bottom_chart(self):
+        frame = tk.Frame(self, bg="#e6e6e6")
+        frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        fig = Figure(figsize=(10, 4), dpi=100)
+        ax = fig.add_subplot(111)
+
+        dias = ["30/12/2025", "05/01/2026"]
+        producao = [3781, 8041.06]
+        meta = [4000, 4000]
+
+        x = range(len(dias))
+        ax.bar(x, producao, width=0.4, label="Produção")
+        ax.bar([i + 0.4 for i in x], meta, width=0.4, label="Meta")
+
+        ax.set_xticks([i + 0.2 for i in x])
+        ax.set_xticklabels(dias)
+        ax.set_title("Meta de Produção Últimos Dias - Valor Total / Produção total")
+        ax.legend()
+
+        canvas = FigureCanvasTkAgg(fig, master=frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side="left", fill="both", expand=True)
+
+        resumo = tk.Frame(frame, bg="#f2f2f2", width=250, bd=1, relief="solid")
+        resumo.pack(side="right", fill="y", padx=10)
+
+        tk.Label(resumo, text="Recebido no Mês:\nR$ 309,00", fg="red").pack(anchor="w", padx=10, pady=5)
+        tk.Label(resumo, text="Meta no Mês:\nR$ 0,00", fg="blue").pack(anchor="w", padx=10, pady=5)
+        tk.Label(resumo, text="Faltam 4 dias úteis").pack(anchor="w", padx=10, pady=5)
+
+        tk.Label(resumo, text="Histórico de:").pack(anchor="w", padx=10, pady=(10,0))
+        ttk.Entry(resumo, width=12).pack(padx=10)
+        tk.Label(resumo, text="a").pack(anchor="center")
+        ttk.Entry(resumo, width=12).pack(padx=10)
+
+    # ---------------- STATUS BAR ----------------
+    def create_status_bar(self):
+        frame = tk.Frame(self, bg="#d0d0d0")
+        frame.pack(fill="x", side="bottom")
+
+        user = "VITORIA MARIA"
+        data = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+        tk.Label(frame, text=f"Usuário: {user}").pack(side="left", padx=10)
+        tk.Label(frame, text=data).pack(side="right", padx=10)
+
+
+if __name__ == "__main__":
+    app = DashboardApp()
+    app.mainloop()

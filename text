@@ -1,0 +1,154 @@
+# import tkinter as tk
+# from tkinter import ttk
+# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+# from matplotlib.figure import Figure
+# from datetime import datetime
+#
+# ================= FUNÇÃO PADRÃO PARA TELAS =================
+#
+# def abrir_tela(titulo):
+#    janela = tk.Toplevel(root)
+#    janela.title(titulo)
+#    janela.geometry("700x500")
+#    janela.transient(root)
+#    janela.grab_set()
+#
+#    frame = ttk.Frame(janela, padding=20)
+#    frame.pack(fill="both", expand=True)
+#
+#    ttk.Label(frame, text=titulo, font=("Arial", 18, "bold")).pack(pady=10)
+#    ttk.Separator(frame).pack(fill="x", pady=10)
+#
+#    ttk.Label(frame, text="Área de cadastro / consulta").pack(pady=20)
+#
+#    ttk.Button(frame, text="Salvar").pack(side="left", padx=5)
+#    ttk.Button(frame, text="Excluir").pack(side="left", padx=5)
+#    ttk.Button(frame, text="Fechar", command=janela.destroy).pack(side="right", padx=5)
+#
+#
+# ================= JANELA PRINCIPAL =================
+#
+# root = tk.Tk()
+# root.title("Telemarketing - Sistema de Produção")
+# root.geometry("1200x700")
+#
+# ================= MENU =================
+#
+# menu_bar = tk.Menu(root)
+#
+# def menu_cmd(nome):
+#    return lambda: abrir_tela(nome)
+#
+# ---- Cadastros
+# menu_cadastros = tk.Menu(menu_bar, tearoff=0)
+# menu_bar.add_cascade(label="Cadastros", menu=menu_cadastros)
+#
+# itens_cad = [
+#    "Contribuintes", "Recibos", "Boletos", "Cobrança",
+#    "Operadores", "Mensageiros", "Supervisores",
+#    "Ruas", "Setores", "E-mail"
+# ]
+#
+# for item in itens_cad:
+#    menu_cadastros.add_command(label=item, command=menu_cmd(item))
+#
+# ---- Consultas
+# menu_consultas = tk.Menu(menu_bar, tearoff=0)
+# menu_bar.add_cascade(label="Consultas", menu=menu_consultas)
+#
+# for item in ["Recibos", "Boletos/Débitos/Cartão", "Operadores", "Mensageiros", "Eventos do Recibo", "Gerencial por Valor"]:
+#    menu_consultas.add_command(label=item, command=menu_cmd(item))
+#
+# ---- Impressão
+# menu_impressao = tk.Menu(menu_bar, tearoff=0)
+# menu_bar.add_cascade(label="Impressão", menu=menu_impressao)
+#
+# for item in ["Recibos", "Relatórios", "Gerador SQL Dinâmico"]:
+#    menu_impressao.add_command(label=item, command=menu_cmd(item))
+#
+# ---- Utilitários
+# menu_utilitarios = tk.Menu(menu_bar, tearoff=0)
+# menu_bar.add_cascade(label="Utilitários", menu=menu_utilitarios)
+#
+# for item in ["Parâmetros do Sistema", "Auditoria", "Backup", "Atualização do Software", "Sobre"]:
+#    menu_utilitarios.add_command(label=item, command=menu_cmd(item))
+#
+# menu_utilitarios.add_separator()
+# menu_utilitarios.add_command(label="Fechar", command=root.destroy)
+#
+# root.config(menu=menu_bar)
+#
+# ================= BARRA SUPERIOR =================
+#
+# top_frame = ttk.Frame(root)
+# top_frame.pack(fill="x", padx=10, pady=5)
+#
+# buttons = [
+#    "Contribuintes", "Recibos", "Bol/Deb/Car", "Operadores",
+#    "Mensageiros", "Supervisores", "Ruas", "Setores", "Usuários", "Listagem"
+# ]
+#
+# for btn in buttons:
+#    ttk.Button(
+#        top_frame,
+#        text=btn,
+#        command=lambda b=btn: abrir_tela(b)
+#    ).pack(side="left", padx=4)
+#
+# ================= ÁREA DE CONTEÚDO =================
+#
+# content = ttk.Frame(root)
+# content.pack(fill="both", expand=True)
+#
+# left_frame = ttk.Frame(content)
+# left_frame.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+#
+# right_frame = ttk.Frame(content)
+# right_frame.pack(side="right", fill="both", expand=True, padx=5, pady=5)
+#
+# ================= GRÁFICO 1 =================
+#
+# fig1 = Figure(figsize=(4, 3), dpi=100)
+# ax1 = fig1.add_subplot(111)
+#
+# meta = 50
+# producao = 40.75
+#
+# ax1.bar(["Meta", "Produção"], [meta, producao])
+# ax1.set_title("Meta de Produção - Média por Ficha")
+#
+# canvas1 = FigureCanvasTkAgg(fig1, master=left_frame)
+# canvas1.draw()
+# canvas1.get_tk_widget().pack(fill="both", expand=True)
+#
+# ================= GRÁFICO 2 =================
+#
+# fig2 = Figure(figsize=(4, 3), dpi=100)
+# ax2 = fig2.add_subplot(111)
+#
+# dias = ["30/12", "05/01"]
+# valores = [3781, 8041]
+#
+# ax2.bar(dias, valores)
+# ax2.set_title("Produção - Últimos Dias")
+#
+# canvas2 = FigureCanvasTkAgg(fig2, master=right_frame)
+# canvas2.draw()
+# canvas2.get_tk_widget().pack(fill="both", expand=True)
+#
+# ================= STATUS BAR =================
+#
+# data = datetime.now().strftime("%d/%m/%Y")
+#
+# status = ttk.Label(
+#    root,
+#    text=f"Usuário: VITÓRIA MARIA | {data}",
+#    relief="sunken",
+#    anchor="w"
+# )
+# status.pack(side="bottom", fill="x")
+#
+# ================= EXECUÇÃO =================
+#
+# root.mainloop()
+#

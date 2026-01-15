@@ -1,9 +1,10 @@
-import tkinter as tk
-from tkinter import ttk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from tkinter import ttk
+import tkinter as tk
 
 # ---------------- JANELA PRINCIPAL ----------------
+
 root = tk.Tk()
 root.title("Telemarketing - Sistema de Produção")
 root.geometry("1200x700")
@@ -125,7 +126,7 @@ root.config(menu=menu_bar)
 top_frame = ttk.Frame(root)
 top_frame.pack(fill="x", padx=10, pady=5)
 
-# btn_fechar = tk.Button(root, text="Sair", command=root.destroy)
+# menu_utilitarios.add_command(label="Fechar", command=root.destroy)
 # btn_fechar.pack(pady=10)
 
 
